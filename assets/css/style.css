@@ -1,3 +1,28 @@
 #flex-container {
     display: flex;
 }
+
+#flex-container section {
+    margin: 15px;
+    padding: 10px;
+    border: solid black;
+}
+
+#input {
+    width: 25%;
+}
+
+#data {
+    width: 75%;
+}
+
+@media screen and (max-width: 992px) {
+    #flex-container {
+        display: block;
+    }
+
+    #flex-container section {
+        width: auto;
+        margin: 15px auto;
+    }
+}
