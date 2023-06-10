@@ -7,7 +7,7 @@ var forecastDiv = document.getElementById("forecast");
 var apiKey = "637ce9c6d877f665b3fcca0a330d1fe0";
 
 function displayResults(results) {
-
+    console.log(results);
 }
 
 function getWeather(lat, lon) {
@@ -20,13 +20,14 @@ function getWeather(lat, lon) {
     fetch(weatherUrl).then(function(response) {
         return response.json();
     }).then(function(data) {
+        console.log(data);
         var results = {};
         results.forecast = [];
         var dayjsFormat = "M/D/YYYY";
         results.name = data.city.name;
         for (var i = 0; i < data.list.length; i++) {
             results.forecast.push({
-                date: dayjs(data.list[i].dt).format(dayjsFormat),
+                date: dayjs.unix(data.list[i].dt).format(dayjsFormat),
                 icon: data.list[i].weather[0].icon,
                 temp: data.list[i].main.temp,
                 humidity: data.list[i].main.humidity,
@@ -43,11 +44,10 @@ function getApiData(cityName) {
 
     // Get lat and long through geocoding API form input city name
     geocodingUrl += ("&q=" + cityName);
-    var loc = {}
     fetch(geocodingUrl).then(function(response) {
         return response.json();
     }).then(function(data) {
-        getWeather(data.lat, data.lon);
+        getWeather(data[0].lat, data[0].lon);
     });
 }
 
