@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h1>
+            Weather Viewer
+        </h1>
+    </header>
+    <div id="flex-container">
+        <section>
+            <nav>
+                <form name="search-form" id="search-form">
+                    <label for="search-input">Search for a City:</label><br>
+                    <input type="text" name="search-input" id="search-input" placeholder="City Name">
+                    <input type="submit" value="Search">
+                </form>
+            </nav>
+            <div id="search-history"></div>
+        </section>
+        <section>
+            <div id="results">results</div>
+            <div id="forecast">forecast</div>
+        </section>
+    </div>
+
+    <script src="./assets/js/script.js"></script>
+</body>
+</html>
