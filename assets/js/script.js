@@ -6,34 +6,48 @@ var searchInput = document.getElementById("search-input");
 
 var apiKey = "637ce9c6d877f665b3fcca0a330d1fe0";
 
+function getIconUrl(code) {
+    return "https://openweathermap.org/img/wn/" + code + "@2x.png";
+}
+
 function displayResults(results) {
-    // Loop through all weather results and pick out 6 times, each with a unique date
+    var resultsDiv = document.getElementById("results");
+    var forecastDiv = document.getElementById("forecast");
+
+    // Clear previous results
+    resultsDiv.innerHTML = "";
+    forecastDiv.innerHTML = "";
+
+    // Loop through all weather results and pick out 6 times, each with a unique date    
     var days = [];
     var newestDate = dayjs(results.forecast[0].date);
     days.push(results.forecast[0]);
     for (var i = 0; i < results.forecast.length; i++) {        
         if (dayjs(results.forecast[i].date).isAfter(newestDate, "day")) {
             newestDate = results.forecast[i].date;
-            days.push(results.forecast[i]);
+            days.push(results.forecast[i + 3]);
         }
     }
 
     //Display today
-    document.querySelector("#results h2").style.display = "block";
-    document.getElementById("city-name").textContent = results.name;
-    document.getElementById("today-date").textContent = days[0].date;
+    var firstDay = days[0];
+    resultsDiv.insertAdjacentHTML("afterbegin",
+    "<h2>Today in " + results.name + ", " + firstDay.date + ":</h2>" +
+    '<p><img src="' + getIconUrl(firstDay.icon) + '"></img></p>' +
+    "<p>Temp: " + firstDay.temp + " &deg;F</p>" +
+    "<p>Wind: " + firstDay.windSpeed + " MPH</p>" +
+    "<p>Humidity: " + firstDay.humidity + "%</p>");
 
     //Display forecast
-    var forecastDiv = document.getElementById("forecast");
     for (var i = 1; i < days.length; i++) {
         var day = days[i];
         var newDiv = document.createElement("div");
         newDiv.insertAdjacentHTML("afterbegin", 
         "<h3>" + day.date + "</h3>" +
-        "<p>" + day.icon + "</p>" +
-        "<p>Temp: " + day.temp + "</p>" +
-        "<p>Wind: " + day.windSpeed + "</p>" +
-        "<p>Humidity: " + day.humidity + "</p>");
+        '<p><img src="' + getIconUrl(day.icon) + '"></img></p>' +
+        "<p>Temp: " + day.temp + " &deg;F</p>" +
+        "<p>Wind: " + day.windSpeed + " MPH</p>" +
+        "<p>Humidity: " + day.humidity + "%</p>");
         forecastDiv.append(newDiv);
     }
 }
