@@ -1,8 +1,7 @@
 var searchForm = document.getElementById("search-form");
 var searchHistoryDiv = document.getElementById("search-history");
 var searchInput = document.getElementById("search-input");
-
-
+var clearHistoryBtn = document.getElementById("clear-history");
 
 var apiKey = "637ce9c6d877f665b3fcca0a330d1fe0";
 
@@ -62,7 +61,6 @@ function getWeather(lat, lon) {
     fetch(weatherUrl).then(function(response) {
         return response.json();
     }).then(function(data) {
-        console.log(data);
         var results = {};
         results.forecast = [];
         var dayjsFormat = "M/D/YYYY";
@@ -81,6 +79,11 @@ function getWeather(lat, lon) {
 }
 
 function getApiData(cityName) {
+    // If the user submitted without typing anything in, exit function to avoid HTTP errors
+    if (!cityName) {
+        return;
+    }
+
     // Set up URL
     var geocodingUrl = "http://api.openweathermap.org/geo/1.0/direct?appid=" + apiKey;
 
@@ -93,9 +96,58 @@ function getApiData(cityName) {
     });
 }
 
+function saveInput(input, savedHistory) {
+    // Check if the provided input already exists within the array, exit function if it does
+    if (savedHistory.includes(input)) {
+        return;
+    }
+
+    // It's the user's first time searching for this city, so save it
+    savedHistory.push(input);
+    localStorage.setItem("searchHistory", JSON.stringify(savedHistory));
+}
+
+function loadHistory() {
+    var historyObj = localStorage.getItem("searchHistory");
+    if (historyObj) {
+        return JSON.parse(historyObj);
+    }
+    return [];
+}
+
+function displayHistory(savedHistory) {
+    // Clear existing display
+    searchHistoryDiv.innerHTML = "";
+
+    // Loop through array and append elements
+    for (var i = 0; i < savedHistory.length; i++) {
+        var newDiv = document.createElement("div");
+        newDiv.insertAdjacentHTML("afterbegin", "<p>" + savedHistory[i] + "</p>");
+        searchHistoryDiv.append(newDiv);
+    }
+}
+
+// When page loads, load and display any previously saved search history
+var savedHistory = loadHistory();
+displayHistory(savedHistory);
+
 searchForm.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    var weatherData = getApiData(searchInput.value);
+    var input = searchInput.value;
+    getApiData(input);
+    saveInput(input, savedHistory);
+    displayHistory(savedHistory);
+
     searchInput.value = "";
 });
+
+searchHistoryDiv.addEventListener("click", function(event) {
+    getApiData(event.target.textContent);
+})
+
+clearHistoryBtn.addEventListener("click", function() {
+    savedHistory = [];
+    displayHistory(savedHistory);
+    localStorage.clear();
+})
