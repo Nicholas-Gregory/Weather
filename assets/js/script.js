@@ -85,7 +85,7 @@ function getApiData(cityName) {
     }
 
     // Set up URL
-    var geocodingUrl = "http://api.openweathermap.org/geo/1.0/direct?appid=" + apiKey;
+    var geocodingUrl = "https://api.openweathermap.org/geo/1.0/direct?appid=" + apiKey;
 
     // Get lat and long through geocoding API form input city name
     geocodingUrl += ("&q=" + cityName);
